@@ -1,0 +1,56 @@
+[
+  {
+    "title": "Junior Python Backend Developer",
+    "company": "Kaspi.kz",
+    "location": "Almaty, KZ",
+    "seniority": "junior",
+    "description": "Разработка REST API на FastAPI, работа с PostgreSQL, написание unit-тестов.",
+    "salary_min": 400000, "salary_max": 700000, "currency": "KZT",
+    "skills": ["Python", "FastAPI", "PostgreSQL", "Git", "Docker", "REST API", "SQL"]
+  },
+  {
+    "title": "Junior Frontend Developer (React)",
+    "company": "Halyk Bank",
+    "location": "Almaty, KZ",
+    "seniority": "junior",
+    "description": "Разработка интерфейсов на React + TypeScript, интеграция с REST API.",
+    "salary_min": 350000, "salary_max": 600000, "currency": "KZT",
+    "skills": ["JavaScript", "TypeScript", "React", "HTML", "CSS", "Git", "REST API"]
+  },
+  {
+    "title": "Middle Java Backend Developer",
+    "company": "BTS Digital",
+    "location": "Astana, KZ",
+    "seniority": "middle",
+    "description": "Микросервисы на Spring Boot, Kafka, PostgreSQL.",
+    "salary_min": 900000, "salary_max": 1400000, "currency": "KZT",
+    "skills": ["Java", "Spring Boot", "PostgreSQL", "Kafka", "Docker", "Kubernetes", "Git"]
+  },
+  {
+    "title": "Junior Data Analyst",
+    "company": "Beeline KZ",
+    "location": "Almaty, KZ",
+    "seniority": "junior",
+    "description": "SQL-аналитика, дашборды в Power BI, базовый Python.",
+    "salary_min": 300000, "salary_max": 500000, "currency": "KZT",
+    "skills": ["SQL", "Python", "Pandas", "Power BI", "Excel", "Statistics"]
+  },
+  {
+    "title": "Junior DevOps Engineer",
+    "company": "Choco",
+    "location": "Almaty, KZ",
+    "seniority": "junior",
+    "description": "CI/CD, Docker, базовое администрирование Linux.",
+    "salary_min": 450000, "salary_max": 750000, "currency": "KZT",
+    "skills": ["Linux", "Docker", "Git", "Bash", "CI/CD", "GitHub Actions", "AWS"]
+  },
+  {
+    "title": "Middle Mobile Developer (Flutter)",
+    "company": "Forte Bank",
+    "location": "Almaty, KZ",
+    "seniority": "middle",
+    "description": "Разработка мобильных приложений на Flutter, интеграция с REST API.",
+    "salary_min": 800000, "salary_max": 1200000, "currency": "KZT",
+    "skills": ["Dart", "Flutter", "REST API", "Git", "Firebase", "SQLite"]
+  }
+]
