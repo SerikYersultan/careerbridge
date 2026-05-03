@@ -24,7 +24,7 @@ class Token(BaseModel):
 
 class SkillOut(BaseModel):
     id: int
-    name: str          # normalized
+    name: str
     display_name: str
     category: Optional[str] = None
 
@@ -34,12 +34,12 @@ class SkillOut(BaseModel):
 
 class ExtractedSkill(BaseModel):
     display_name: str
-    category: Optional[str] = None  # language|framework|db|cloud|tool|other
+    category: Optional[str] = None
 
 
 class ResumeExtractResponse(BaseModel):
-    resume_text_preview: str       # первые 500 символов для отладки
-    skills: List[ExtractedSkill]   # КАНДИДАТЫ — пользователь редактирует на фронте
+    resume_text_preview: str
+    skills: List[ExtractedSkill]
 
 
 class SkillsSaveRequest(BaseModel):

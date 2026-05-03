@@ -18,7 +18,7 @@ class Roadmap(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
     target_role = Column(String(120), nullable=False)
-    data = Column(JSON, nullable=False)  # {"nodes":[...], "edges":[...]}
+    data = Column(JSON, nullable=False)
     created_at = Column(DateTime, server_default=func.now())
 
     user = relationship("User", back_populates="roadmaps")
@@ -31,21 +31,18 @@ class User(Base):
     email = Column(String(255), unique=True, nullable=False, index=True)
     hashed_password = Column(String(255), nullable=False)
     full_name = Column(String(255), nullable=True)
-    resume_text = Column(Text, nullable=True)        # сырой текст последнего PDF
+    resume_text = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
     skills = relationship("UserSkill", back_populates="user", cascade="all, delete-orphan")
     roadmaps = relationship("Roadmap", back_populates="user", cascade="all, delete-orphan")
-# простейший вариант для MVP — пересоздать таблицы
-
 class Skill(Base):
     __tablename__ = "skills"
 
     id = Column(Integer, primary_key=True, index=True)
-    # храним в lower-case для дедупликации; display — как видит пользователь
     name = Column(String(128), unique=True, nullable=False, index=True)
     display_name = Column(String(128), nullable=False)
-    category = Column(String(64), nullable=True)  # language / framework / db / cloud / tool
+    category = Column(String(64), nullable=True)
 
     user_links = relationship("UserSkill", back_populates="skill", cascade="all, delete-orphan")
     job_links = relationship("JobSkill", back_populates="skill", cascade="all, delete-orphan")
@@ -58,8 +55,8 @@ class UserSkill(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     skill_id = Column(Integer, ForeignKey("skills.id", ondelete="CASCADE"), nullable=False)
-    confirmed = Column(Boolean, default=True, nullable=False)  # подтверждён юзером после AI-парсинга
-    source = Column(String(32), default="manual", nullable=False)  # ai | manual
+    confirmed = Column(Boolean, default=True, nullable=False)
+    source = Column(String(32), default="manual", nullable=False)
 
     user = relationship("User", back_populates="skills")
     skill = relationship("Skill", back_populates="user_links")
@@ -72,7 +69,7 @@ class Job(Base):
     title = Column(String(255), nullable=False, index=True)
     company = Column(String(255), nullable=False)
     location = Column(String(128), nullable=True)
-    seniority = Column(String(32), nullable=True)  # junior | middle
+    seniority = Column(String(32), nullable=True)
     description = Column(Text, nullable=True)
     salary_min = Column(Integer, nullable=True)
     salary_max = Column(Integer, nullable=True)
@@ -90,7 +87,7 @@ class JobSkill(Base):
     id = Column(Integer, primary_key=True)
     job_id = Column(Integer, ForeignKey("jobs.id", ondelete="CASCADE"), nullable=False)
     skill_id = Column(Integer, ForeignKey("skills.id", ondelete="CASCADE"), nullable=False)
-    weight = Column(Float, default=1.0, nullable=False)  # для будущего ранжирования
+    weight = Column(Float, default=1.0, nullable=False)
 
     job = relationship("Job", back_populates="skill_links")
     skill = relationship("Skill", back_populates="job_links")

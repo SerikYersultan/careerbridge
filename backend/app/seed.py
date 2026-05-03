@@ -26,7 +26,7 @@ def get_or_create_skill(db: Session, raw_name: str) -> Skill:
 
 def seed_jobs(db: Session) -> int:
     if db.query(Job).count() > 0:
-        return 0  # уже наполнено
+        return 0
 
     with SEED_FILE.open("r", encoding="utf-8") as f:
         payload = json.load(f)

@@ -27,7 +27,6 @@ def on_startup() -> None:
 def health():
     return {"status": "ok"}
 
-# Роутеры подключаются ТОЛЬКО здесь, в самом конце
 app.include_router(auth.router)
 app.include_router(profile.router)
 app.include_router(roadmap.router)

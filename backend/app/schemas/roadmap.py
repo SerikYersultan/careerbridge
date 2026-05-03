@@ -41,4 +41,4 @@ class RoadmapEdge(BaseModel):
 class RoadmapResponse(BaseModel):
     target_role: str
     nodes: List[RoadmapNode]
-    edges: List[dict]  # {"from": "...", "to": "..."}
+    edges: List[dict]

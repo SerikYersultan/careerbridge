@@ -7,11 +7,12 @@ from ..models import User, Skill, UserSkill
 from ..schemas import ResumeExtractResponse, ExtractedSkill, SkillsSaveRequest, SkillOut
 from ..auth import get_current_user
 from ..services.pdf import extract_text_from_pdf, PDFExtractionError
-from ..services.ai import extract_skills_from_resume, AIServiceError
+from ..services.ai import AIServiceError
+from ..services.hybrid_nlp import extract_skills_hybrid
 
 router = APIRouter(prefix="/profile", tags=["profile"])
 
-MAX_PDF_BYTES = 10 * 1024 * 1024  # 10 MB
+MAX_PDF_BYTES = 10 * 1024 * 1024
 
 
 @router.post("/upload-resume", response_model=ResumeExtractResponse)
@@ -33,11 +34,11 @@ async def upload_resume(
         raise HTTPException(status_code=422, detail=str(e))
 
     try:
-        skills = await extract_skills_from_resume(text)
+        extraction = await extract_skills_hybrid(text)
+        skills = extraction["skills"]
     except AIServiceError as e:
         raise HTTPException(status_code=502, detail=str(e))
 
-    # Сохраняем сырой текст; навыки НЕ сохраняем — ждём подтверждения от юзера
     current.resume_text = text
     db.commit()
 
@@ -64,7 +65,6 @@ def save_skills(
     db: Session = Depends(get_db),
     current: User = Depends(get_current_user),
 ):
-    # Полная замена набора подтверждённых навыков пользователя
     db.query(UserSkill).filter(UserSkill.user_id == current.id).delete()
 
     saved: list[Skill] = []

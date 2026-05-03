@@ -40,6 +40,7 @@ class AIServiceError(Exception):
 
 
 async def extract_skills_from_resume(resume_text: str) -> List[Dict[str, Any]]:
+    """Extract technical skills from resume text via Gemini."""
     snippet = resume_text[:15000]
 
     prompt = (
@@ -58,7 +59,6 @@ async def extract_skills_from_resume(resume_text: str) -> List[Dict[str, Any]]:
 
     skills = result.get("skills", [])
 
-    # Dedup by normalized name
     seen = set()
     unique = []
     for s in skills:

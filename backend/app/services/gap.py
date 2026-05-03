@@ -4,7 +4,6 @@ from sqlalchemy.orm import Session
 from app import models
 
 
-# Веса категорий для приоритизации недостающих навыков
 CATEGORY_WEIGHT = {
     "language": 1.0,
     "framework": 0.9,
@@ -26,16 +25,7 @@ def compute_gap(
     target_role: str,
     top_n_jobs: int = 50,
 ) -> Dict[str, Any]:
-    """
-    На вход:
-      - user_skills: список названий навыков пользователя (из profile.skills)
-      - target_role: целевая роль ("Backend Developer", "Data Analyst", ...)
-    Логика:
-      1) Берём top_n_jobs последних вакансий с похожим title.
-      2) Считаем частоту каждого требуемого навыка.
-      3) market_skills = навыки, встречающиеся в >=20% вакансий.
-      4) gap = market_skills - user_skills (с учётом категории и частоты).
-    """
+    """Compute market skill coverage and return have/missing skill sets."""
     user_set = {_normalize(s) for s in user_skills}
 
     q = (
@@ -55,17 +45,16 @@ def compute_gap(
         }
 
     counter: Counter = Counter()
-    skill_meta: Dict[str, str] = {}  # name -> category
+    skill_meta: Dict[str, str] = {}
 
     for job in jobs:
-        # Используем skill_links, как прописано в твоей модели Job
-        for js in job.skill_links:  
+        for js in job.skill_links:
             name = _normalize(js.skill.name)
             counter[name] += 1
             skill_meta[name] = js.skill.category or "other"
 
     n = len(jobs)
-    threshold = max(1, int(n * 0.2))  # навык важен, если в >=20% вакансий
+    threshold = max(1, int(n * 0.2))
 
     market = [
         {

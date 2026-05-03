@@ -11,3 +11,5 @@ pdfplumber
 httpx
 python-dotenv
 google-genai>=1.0.0
+telethon
+spacy
