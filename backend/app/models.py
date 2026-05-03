@@ -7,6 +7,22 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 from .database import Base
 
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, JSON, func
+from sqlalchemy.orm import relationship
+from app.database import Base
+
+
+class Roadmap(Base):
+    __tablename__ = "roadmaps"
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    target_role = Column(String(120), nullable=False)
+    data = Column(JSON, nullable=False)  # {"nodes":[...], "edges":[...]}
+    created_at = Column(DateTime, server_default=func.now())
+
+    user = relationship("User", back_populates="roadmaps")
+
 
 class User(Base):
     __tablename__ = "users"
@@ -20,7 +36,7 @@ class User(Base):
 
     skills = relationship("UserSkill", back_populates="user", cascade="all, delete-orphan")
     roadmaps = relationship("Roadmap", back_populates="user", cascade="all, delete-orphan")
-
+# простейший вариант для MVP — пересоздать таблицы
 
 class Skill(Base):
     __tablename__ = "skills"
@@ -80,19 +96,6 @@ class JobSkill(Base):
     skill = relationship("Skill", back_populates="job_links")
 
 
-class Roadmap(Base):
-    __tablename__ = "roadmaps"
-
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
-    target_job_id = Column(Integer, ForeignKey("jobs.id", ondelete="SET NULL"), nullable=True)
-    target_role = Column(String(128), nullable=True)  # напр. "Junior Backend Developer"
-    match_score = Column(Float, nullable=False, default=0.0)  # 0..100
-    missing_skills = Column(JSONB, nullable=False, default=list)
-    graph = Column(JSONB, nullable=False, default=dict)  # {nodes:[], edges:[]} для React Flow
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-
-    user = relationship("User", back_populates="roadmaps")
 
 
 Index("ix_user_skills_user", UserSkill.user_id)

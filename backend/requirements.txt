@@ -10,3 +10,4 @@ python-multipart
 pdfplumber
 httpx
 python-dotenv
+google-genai>=1.0.0
