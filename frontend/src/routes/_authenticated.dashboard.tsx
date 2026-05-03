@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { Loader2, Sparkles, Target } from "lucide-react";
 import { useAuth } from "../lib/auth";
 import { RoadmapFlow } from "../components/RoadmapFlow";
+import { AICareerAssistant } from "../components/AICareerAssistant";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({ meta: [{ title: "Дашборд — CareerBridge" }] }),
@@ -198,6 +199,7 @@ function DashboardPage() {
           </CardContent>
         </Card>
       )}
+      <AICareerAssistant />
     </main>
   );
 }

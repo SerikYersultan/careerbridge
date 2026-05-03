@@ -79,7 +79,7 @@ export async function api<T = unknown>(path: string, opts: Options = {}): Promis
 export type User = { id: number; email: string; full_name?: string | null };
 
 export type SkillCandidate = {
-  name: string;
+  display_name: string;
   category: "language" | "framework" | "database" | "tool" | "cloud" | "soft" | "other" | string;
   confidence?: number;
 };
@@ -87,6 +87,7 @@ export type SkillCandidate = {
 export type UserSkill = {
   id: number;
   name: string;
+  display_name?: string;
   category: string;
   level?: "beginner" | "intermediate" | "advanced" | null;
 };

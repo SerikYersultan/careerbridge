@@ -29,7 +29,7 @@ function SkillsPage() {
       const data = await api<UserSkill[]>("/profile/skills");
       setSavedSkills(data);
       if (draft.length === 0) {
-        setDraft(data.map((s) => ({ name: s.name, category: s.category })));
+        setDraft(data.map((s) => ({ display_name: s.display_name ?? s.name, category: s.category })));
       }
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Не удалось загрузить навыки");
@@ -47,10 +47,9 @@ function SkillsPage() {
     fd.append("file", file);
     try {
       const res = await api<{ skills: SkillCandidate[] }>("/profile/upload-resume", { method: "POST", formData: fd });
-      // merge: existing draft + new candidates (dedup by lowercased name)
-      const existing = new Map(draft.map((s) => [s.name.toLowerCase(), s]));
+      const existing = new Map(draft.map((s) => [s.display_name.toLowerCase(), s]));
       for (const s of res.skills) {
-        const k = s.name.toLowerCase();
+        const k = s.display_name.toLowerCase();
         if (!existing.has(k)) existing.set(k, s);
       }
       setDraft(Array.from(existing.values()));
@@ -64,17 +63,17 @@ function SkillsPage() {
   };
 
   const removeSkill = (name: string) => {
-    setDraft((prev) => prev.filter((s) => s.name !== name));
+    setDraft((prev) => prev.filter((s) => s.display_name !== name));
   };
 
   const addSkill = () => {
     const n = newName.trim();
     if (!n) return;
-    if (draft.some((s) => s.name.toLowerCase() === n.toLowerCase())) {
+    if (draft.some((s) => s.display_name.toLowerCase() === n.toLowerCase())) {
       toast.error("Этот навык уже есть");
       return;
     }
-    setDraft((prev) => [...prev, { name: n, category: newCategory }]);
+    setDraft((prev) => [...prev, { display_name: n, category: newCategory }]);
     setNewName("");
   };
 
@@ -82,8 +81,8 @@ function SkillsPage() {
     setSaving(true);
     try {
       await api("/profile/skills", {
-        method: "PUT",
-        body: { skills: draft.map((s) => ({ name: s.name, category: s.category })) },
+        method: "POST",
+        body: { skills: draft.map((s) => ({ display_name: s.display_name, category: s.category })) },
       });
       toast.success("Навыки сохранены");
       await loadSaved();
@@ -137,14 +136,14 @@ function SkillsPage() {
           ) : (
             <div className="flex flex-wrap gap-2">
               {draft.map((s) => (
-                <Badge key={s.name} variant="secondary" className="gap-1 pr-1">
-                  <span>{s.name}</span>
+                <Badge key={s.display_name} variant="secondary" className="gap-1 pr-1">
+                  <span>{s.display_name}</span>
                   <span className="text-xs text-muted-foreground">· {s.category}</span>
                   <button
                     type="button"
-                    onClick={() => removeSkill(s.name)}
+                    onClick={() => removeSkill(s.display_name)}
                     className="ml-1 rounded p-0.5 hover:bg-destructive/20"
-                    aria-label={`Удалить ${s.name}`}
+                    aria-label={`Удалить ${s.display_name}`}
                   >
                     <X className="h-3 w-3" />
                   </button>
